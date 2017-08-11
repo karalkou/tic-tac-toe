@@ -2270,7 +2270,7 @@ describe('TicTacToe', () => {
             expect(game.getWinner()).to.equal('o')
 
 
-            /*game = new TicTacToe();
+            game = new TicTacToe();
             game.nextTurn(1, 0)
             expect(game.getWinner()).to.equal(null)
 
@@ -2823,7 +2823,7 @@ describe('TicTacToe', () => {
             expect(game.getWinner()).to.equal(null)
 
             game.nextTurn(2, 0)
-            expect(game.getWinner()).to.equal('x')*/
+            expect(game.getWinner()).to.equal('x')
 
         });
     });

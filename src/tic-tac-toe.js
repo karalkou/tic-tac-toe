@@ -2,6 +2,7 @@ class TicTacToe {
     constructor() {
         this.currentPlayer = 'x';
         this.turns = 0;
+        this.winner = null;
         this.position = [];
 
         for (let i=0; i<3; i+=1) {
@@ -11,7 +12,6 @@ class TicTacToe {
     }
 
     getCurrentPlayerSymbol() {
-        //console.log('this.currentPlayer: ', this.currentPlayer);
         return this.currentPlayer;
     }
 
@@ -19,85 +19,36 @@ class TicTacToe {
         let currentVal = this.getFieldValue(rowIndex, columnIndex);
         if ( !currentVal ) {
             this.position[rowIndex][columnIndex] = this.currentPlayer;
-            if ( this.currentPlayer === 'x' ) {
-                this.currentPlayer = this.currentPlayer === "x" ? "o" : "x";
-            } else {
-                this.currentPlayer = this.currentPlayer === "0" ? "x" : "o";
-            }
-
+            this.currentPlayer === 'x' ? this.currentPlayer = 'o' : this.currentPlayer = 'x';
             this.turns++;
+
+            if (
+                  (this.position[0][0] && this.position[0][0] === this.position[0][1] && this.position[0][0] === this.position[0][2])
+                ||(this.position[1][0] && this.position[1][0] === this.position[1][1] && this.position[1][0] === this.position[1][2])
+                ||(this.position[2][0] && this.position[2][0] === this.position[2][1] && this.position[2][0] === this.position[2][2])
+                ||(this.position[0][0] && this.position[0][0] === this.position[1][1] && this.position[0][0] === this.position[2][2])
+                ||(this.position[0][2] && this.position[0][2] === this.position[1][1] && this.position[0][2] === this.position[2][0])
+                ||(this.position[0][0] && this.position[0][0] === this.position[1][0] && this.position[0][0] === this.position[2][0])
+                ||(this.position[0][1] && this.position[0][1] === this.position[1][1] && this.position[0][1] === this.position[2][1])
+                ||(this.position[0][2] && this.position[0][2] === this.position[1][2] && this.position[0][2] === this.position[2][2])
+            ){
+                this.winner = this.currentPlayer;
+            }
         }
     }
 
     isFinished() {
-
+        return this.isDraw() || !!this.getWinner();
     }
 
     getWinner() {
-        let B = this.position;
-
-        //check rows
-        /*for(let i = 0; i <= 6; i = i + 3) {
-            if( B[i] !== undefined && B[i] === B[i + 1] && B[i + 1] === B[i + 2] ) {
-                console.log( B[i] + "-won" );
-                return true;
-            }
+        if (this.winner === 'x') {
+            return 'o';
         }
-
-        //check columns
-        for(let i = 0; i <= 2 ; i++) {
-            if(B[i] !== undefined && B[i] === B[i + 3] && B[i + 3] === B[i + 6]) {
-                console.log( B[i] + "-won" );
-                return true;
-            }
+        else if (this.winner === 'o') {
+            return 'x'
         }
-
-        //check diagonals
-        for(let i = 0, j = 4; i <= 2 ; i = i + 2, j = j - 2) {
-            if (B[i] !== undefined && B[i] === B[i + j] && B[i + j] === B[i + 2 * j]) {
-                console.log( B[i] + "-won" );
-                return true;
-            }
-        }*/
-
-        /* my implementation */
-        // check rows
-        for ( let i=0; i<3; i+=1 ) {
-            for ( let j=0; j<3; j+=1 ) {
-                if( B[i][j] && B[i][j] === B[i][j+1] && B[i][j+1] === B[i][j+2] ){
-                    console.log(''+B[i][j]+' wins!!');
-                    return B[i][j];
-                }
-            }
-            console.log('B['+i+']: ', B[i]);
-
-        }console.log('---rows---');
-        // check cols
-        for ( let i=0; i<3; i+=1 ) {
-            for ( let j=0; j<3; j+=1 ) {
-                if( B[i][j] && B[i+1] && B[i+2] && B[i][j] === B[i+1][j] && B[i+1][j] === B[i+2][j] ){
-                    console.log(''+B[i][j]+' wins!!');
-                    return B[i][j];
-                }
-            }
-            console.log('B['+i+']: ', B[i]);
-
-        }console.log('---cols---');
-        // check diagonals
-        for ( let i=0; i<3; i+=1 ) {
-            for ( let j=0; j<3; j+=1 ) {
-                if( B[i][j] && B[i+1] && B[i+2] && B[i][j] === B[i+1][j+1] && B[i+1][j+1] === B[i+2][j+2] ){
-                    console.log(''+B[i][j]+' wins!!');
-                    return B[i][j];
-                }
-            }
-            console.log('B['+i+']: ', B[i]);
-
-        }console.log('---diagonals---');
-
-        return null;
-
-
+        else return null;
     }
 
     noMoreTurns() {
@@ -105,7 +56,7 @@ class TicTacToe {
     }
 
     isDraw() {
-
+        return this.noMoreTurns() && !this.winner;
     }
 
     getFieldValue(rowIndex, colIndex) {
